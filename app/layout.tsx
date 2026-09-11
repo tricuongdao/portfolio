@@ -15,6 +15,10 @@ export const metadata: Metadata = {
   metadataBase: new URL("https://vinnydao.dev"),
   title: "Vinny Dao | Full-Stack Developer",
   description: "Full-stack developer based in Brisbane. I study Information Technology at QUT and build full-stack web apps in JavaScript and Python.",
+  icons: {
+    icon: "/Vinny.D.jpg",
+    apple: "/Vinny.D.jpg",
+  },
 };
 
 export const viewport: Viewport = {
