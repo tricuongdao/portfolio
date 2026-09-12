@@ -145,7 +145,7 @@ export default function ContactPage() {
             </a>
 
             <a
-              href="https://linkedin.com/in/tricuongdao"
+              href="https://www.linkedin.com/in/tri-cuong-dao"
               target="_blank"
               rel="noopener noreferrer"
               className={contactPageStyles.contactCard}
@@ -161,7 +161,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <p className={contactPageStyles.contactLabel}>LinkedIn</p>
-                <p className={contactPageStyles.contactValue}>linkedin.com/in/tricuongdao</p>
+                <p className={contactPageStyles.contactValue}>linkedin.com/in/tri-cuong-dao</p>
               </div>
             </a>
           </div>

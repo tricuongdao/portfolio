@@ -2,7 +2,7 @@
 
 export const homePageStyles = {
   // Layout and container styles
-  container: "relative z-10 bg-zinc-950b p-6 pt-20 md:pt-16 md:p-20",
+  container: "relative z-10 min-h-screen bg-zinc-950 p-6 pt-20 md:pt-16 md:p-20",
 
   // Background grid pattern
   backgroundGrid: {
