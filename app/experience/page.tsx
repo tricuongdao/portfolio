@@ -192,26 +192,34 @@ export default function TimelineDemo() {
               <Code2 className={s.techSectionIcon} />
             </div>
             <div>
-              <h3 className={s.techSectionTitle}>Technologies & Skills</h3>
-              <p className={s.techSectionSubtitle}>Full-stack expertise and professional skills</p>
+              <h3 className={s.techSectionTitle}>Technologies Mastered</h3>
+              <p className={s.techSectionSubtitle}>Full-stack expertise across modern tech stack</p>
             </div>
           </div>
           <div className={s.techGrid}>
             <div className={s.techCard}>
-              <div className={`${s.techCardTitle} ${s.textBlue}`}>Languages</div>
-              <div className={s.techCardContent}>JavaScript, Python</div>
+              <div className={`${s.techCardTitle} ${s.textBlue}`}>Frontend</div>
+              <div className={s.techCardContent}>React, TypeScript, Tailwind, Next.js</div>
             </div>
             <div className={s.techCard}>
-              <div className={`${s.techCardTitle} ${s.textEmerald}`}>Web & Data</div>
-              <div className={s.techCardContent}>React, Node.js, PostgreSQL, MongoDB, REST, GraphQL</div>
+              <div className={`${s.techCardTitle} ${s.textEmerald}`}>Backend</div>
+              <div className={s.techCardContent}>Node.js, GoLang, Rails, Python</div>
             </div>
             <div className={s.techCard}>
-              <div className={`${s.techCardTitle} ${s.textPurple}`}>Tooling & Cloud</div>
-              <div className={s.techCardContent}>Git, AWS, CI/CD, Vite, Express, Tailwind</div>
+              <div className={`${s.techCardTitle} ${s.textPurple}`}>AI/ML</div>
+              <div className={s.techCardContent}>OpenAI, LangChain, Vector DBs</div>
             </div>
             <div className={s.techCard}>
-              <div className={`${s.techCardTitle} ${s.textAmber}`}>Professional</div>
-              <div className={s.techCardContent}>Legal Writing, Document Management, Client Relations</div>
+              <div className={`${s.techCardTitle} ${s.textAmber}`}>Databases</div>
+              <div className={s.techCardContent}>PostgreSQL, Redis, MongoDB, TimescaleDB</div>
+            </div>
+            <div className={s.techCard}>
+              <div className={`${s.techCardTitle} ${s.textRose}`}>Cloud & DevOps</div>
+              <div className={s.techCardContent}>AWS, Cloudflare, Docker, CI/CD</div>
+            </div>
+            <div className={s.techCard}>
+              <div className={`${s.techCardTitle} ${s.textCyan}`}>Tools</div>
+              <div className={s.techCardContent}>Git, Figma, Vercel, Agile/Scrum</div>
             </div>
           </div>
         </div>

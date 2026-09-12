@@ -13,7 +13,6 @@ export default function ProjectsPage() {
         {/* Header */}
         <div className={s.header}>
           <h1 className={s.pageTitle}>Projects</h1>
-          <p className={s.pageSubtitle}>Playground - Small MVP to Production Apps</p>
         </div>
 
         {/* Projects Grid */}
