@@ -8,11 +8,17 @@ export default function Footer() {
   const [timeNow, setTimeNow] = useState<string>("");
 
   useEffect(() => {
-    setTimeNow(new Date().toLocaleTimeString());
-    const id = setInterval(
-      () => setTimeNow(new Date().toLocaleTimeString()),
-      1000,
-    );
+    const formatBrisbaneTime = () =>
+      new Date().toLocaleTimeString("en-AU", {
+        timeZone: "Australia/Brisbane",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,
+      });
+
+    setTimeNow(formatBrisbaneTime());
+    const id = setInterval(() => setTimeNow(formatBrisbaneTime()), 1000);
     return () => clearInterval(id);
   }, []);
 
