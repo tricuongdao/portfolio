@@ -54,10 +54,10 @@ const ExperienceIcon = ({ className, ...props }: IconProps) => (
   </svg>
 );
 
-const ToolsIcon = ({ className, ...props }: IconProps) => (
+const CertificateIcon = ({ className, ...props }: IconProps) => (
   <svg viewBox="0 0 24 24" fill="none" strokeWidth={2} stroke="currentColor" aria-hidden="true" className={className} {...props}>
-    <path strokeLinecap="round" strokeLinejoin="round" d="M14 7a4 4 0 0 1 0 8l6 6-2 2-6-6a4 4 0 1 1 2-10z" />
-    <path strokeLinecap="round" strokeLinejoin="round" d="M13 8l3 3" />
+    <circle cx="12" cy="9" r="5.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path strokeLinecap="round" strokeLinejoin="round" d="M8.5 13.5L7 21l5-2.5L17 21l-1.5-7.5" />
   </svg>
 );
 
@@ -104,7 +104,7 @@ export default function Sidebar() {
     { href: "/", label: "Home", Icon: HomeIcon },
     { href: "/projects", label: "Projects", Icon: ProjectsIcon },
     { href: "/experience", label: "Experience", Icon: ExperienceIcon },
-    { href: "/tools", label: "Tools", Icon: ToolsIcon },
+    { href: "/certificates", label: "Certificates", Icon: CertificateIcon },
     { href: "/about", label: "About", Icon: UserIcon },
     { href: "/contact", label: "Contact", Icon: MailIcon },
   ];

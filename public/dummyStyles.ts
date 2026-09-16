@@ -340,27 +340,105 @@ export const styles = {
   projects: projectStyles,
 };
 
-export const toolsPageStyles = {
+export const certificatesPageStyles = {
   // Layout and container styles
-  pageContainer: "flex min-h-screen w-full justify-center bg-zinc-950 pt-20 xl:pt-16 px-6 py-12 md:px-12 md:py-20 lg:px-16",
+  pageContainer: "relative flex min-h-screen w-full justify-center bg-zinc-950 pt-20 xl:pt-16 px-6 py-12 md:px-12 md:py-20 lg:px-16",
   contentContainer: "w-full max-w-full",
 
   // Header
-  headerContainer: "mb-12",
-  headerTitle: "text-4xl md:text-5xl font-bold tracking-tight text-zinc-100 leading-none mb-2",
-  headerSubtitle: "text-md text-zinc-400",
+  headerContainer: "mb-10",
+  headerBadge: "mb-5 inline-flex items-center gap-2 rounded-full border border-emerald-500/20 bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-400",
+  headerBadgeDot: "h-1.5 w-1.5 rounded-full bg-emerald-400",
+  headerTitle: "text-4xl md:text-5xl font-bold tracking-tight text-zinc-100 leading-none mb-3",
+  headerSubtitle: "text-md max-w-2xl text-zinc-400",
 
-  // Tools grid
-  toolsGrid: "grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4",
+  // Filter bar
+  filterSection: "mb-8 flex flex-wrap items-center gap-2",
+  filterLabel: "mr-1 text-xs font-medium uppercase tracking-wider text-zinc-500",
+  filterChip: "cursor-pointer rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950",
+  filterChipActive: "border-zinc-100 bg-zinc-100 text-zinc-900",
+  filterChipInactive: "border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:bg-zinc-900 hover:text-zinc-100",
+  filterChipCount: "ml-1.5 rounded-full bg-zinc-950/20 px-1.5 py-0.5 text-[11px] font-semibold",
+  filterResultText: "w-full text-xs text-zinc-500 sm:ml-auto sm:w-auto",
 
-  // Tool card
-  toolCardLink: "group flex w-full cursor-pointer items-center gap-4 rounded-xl p-4 transition-all duration-300 hover:bg-zinc-900/30",
-  toolIconContainer: "relative h-12 w-12 flex-shrink-0",
-  toolIcon: "h-full w-full rounded-lg object-cover transition-transform duration-300 group-hover:scale-110",
-  toolTextContainer: "flex-1 min-w-0",
-  toolName: "text-base font-medium text-zinc-100 truncate group-hover:text-zinc-50",
-  toolCategory: "text-xs text-zinc-500 group-hover:text-zinc-400"
+  // Certificates grid
+  certificatesGrid: "grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3",
+  emptyState: "col-span-full rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/20 p-10 text-center text-sm text-zinc-500",
+
+  // Certificate card
+  certificateCard: "group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-2xl p-4 text-left transition-all duration-300 hover:bg-zinc-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
+  certificateCardShimmer: "pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full",
+  certificateCardTop: "mb-4 flex items-start justify-between gap-3",
+  certificateIconContainer: "relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-zinc-800 to-zinc-950 ring-1 ring-white/10",
+  certificateIcon: "h-6 w-6 text-zinc-300 transition-transform duration-300 group-hover:scale-110",
+  certificateIconGlow: "absolute inset-0 rounded-xl bg-linear-to-br from-white/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100",
+  certificateTypeBadge: "whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-medium",
+  certificateTitle: "text-base font-semibold text-zinc-100 transition-colors group-hover:text-zinc-50",
+  certificateIssuer: "mt-1 text-xs text-zinc-500 transition-colors group-hover:text-zinc-400",
+  certificateDescription: "mt-3 line-clamp-2 text-sm leading-relaxed text-zinc-400",
+  certificateMetaList: "mt-4 space-y-2 border-t border-zinc-800/80 pt-4",
+  certificateMetaRow: "flex items-center justify-between gap-4 text-xs",
+  certificateMetaLabel: "text-zinc-500",
+  certificateMetaValue: "font-medium text-zinc-300",
+  certificateMetaValueMono: "font-mono text-[11px] tracking-tight text-zinc-300",
+  certificateStatusActive: "inline-flex items-center gap-1.5 rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-400",
+  certificateStatusExpired: "inline-flex items-center gap-1.5 rounded-full bg-zinc-800 px-2 py-0.5 text-[11px] font-medium text-zinc-400",
+  certificateStatusDotActive: "h-1.5 w-1.5 rounded-full bg-emerald-400",
+  certificateStatusDotExpired: "h-1.5 w-1.5 rounded-full bg-zinc-500",
+  certificateSkills: "mt-4 flex flex-wrap gap-1.5",
+  certificateSkill: "rounded-md border border-zinc-800 bg-zinc-900/60 px-2 py-1 text-[11px] text-zinc-400",
+  certificateCardFooter: "mt-5 flex items-center justify-between gap-3 border-t border-zinc-800/80 pt-4",
+  certificateCardFooterText: "text-sm font-medium text-zinc-300 transition-colors group-hover:text-zinc-100",
+  certificateCardFooterIcon: "h-4 w-4 text-zinc-500 transition-all duration-300 group-hover:translate-x-1 group-hover:text-zinc-200",
 };
+
+export const certificateModalStyles = {
+  // Overlay + panel
+  overlay: "fixed inset-0 z-100 flex items-center justify-center bg-black/80 p-3 backdrop-blur-md sm:p-6",
+  panel: "relative flex max-h-[92vh] w-full max-w-5xl flex-col overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-950 shadow-2xl",
+  panelGlow: "pointer-events-none absolute inset-x-0 top-0 h-px bg-linear-to-r from-transparent via-zinc-500/60 to-transparent",
+
+  // Header
+  header: "flex flex-wrap items-start justify-between gap-4 border-b border-zinc-800 p-4 sm:p-5",
+  headerLeft: "min-w-0 flex-1",
+  headerTypeBadge: "mb-2 inline-block rounded-full border px-2.5 py-1 text-[11px] font-medium",
+  title: "text-lg font-semibold text-zinc-100 sm:text-xl",
+  subtitle: "mt-1 text-xs text-zinc-500 sm:text-sm",
+
+  // Header actions
+  actions: "flex items-center gap-2",
+  actionButton: "inline-flex items-center gap-2 rounded-lg border border-zinc-800 bg-zinc-900 px-3 py-2 text-xs font-medium text-zinc-300 transition-all hover:border-zinc-700 hover:bg-zinc-800 hover:text-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
+  actionIcon: "h-4 w-4",
+  closeButton: "inline-flex h-9 w-9 items-center justify-center rounded-lg border border-zinc-800 bg-zinc-900 text-zinc-400 transition-all hover:border-zinc-700 hover:bg-zinc-800 hover:text-zinc-100 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
+  closeIcon: "h-4 w-4",
+
+  // Body + certificate frame
+  body: "relative flex-1 overflow-auto bg-zinc-900/30 p-2 sm:p-4",
+  frameContainer: "relative w-full overflow-hidden rounded-xl border border-zinc-800 bg-white",
+  frame: "block aspect-[1414/1000] w-full",
+  loader: "absolute inset-0 flex flex-col items-center justify-center gap-3 bg-zinc-950",
+  loaderSpinner: "h-6 w-6 animate-spin rounded-full border-2 border-zinc-700 border-t-zinc-300",
+  loaderText: "text-xs text-zinc-500",
+  frameHidden: "opacity-0",
+  frameVisible: "opacity-100 transition-opacity duration-500",
+  frameHint: "mt-3 text-center text-[11px] text-zinc-500",
+  frameHintLink: "font-medium text-zinc-300 underline decoration-zinc-700 underline-offset-4 transition-colors hover:text-zinc-100 hover:decoration-zinc-500",
+
+  // Footer
+  footer: "flex flex-wrap items-center justify-between gap-3 border-t border-zinc-800 p-4 sm:px-5",
+  footerText: "text-xs text-zinc-500",
+  footerLink: "text-xs font-medium text-zinc-300 underline decoration-zinc-700 underline-offset-4 transition-colors hover:text-zinc-100 hover:decoration-zinc-500",
+};
+
+/**
+ * Accent classes per certificate type so new certificate types can be added
+ * without touching the page markup.
+ */
+export const certificateTypeStyles: Record<string, string> = {
+  "Cyber Security": "border-emerald-500/20 bg-emerald-500/10 text-emerald-400",
+};
+
+export const certificateTypeFallbackStyle = "border-zinc-700 bg-zinc-800/60 text-zinc-300";
 
 // Add these to assets/dummyStyles.js
 
