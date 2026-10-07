@@ -4,7 +4,12 @@ import React, { useEffect, useState } from "react";
 import { TextHoverEffect } from "./ui/text-hover-effect";
 import Link from "next/link";
 
-export default function Footer() {
+/**
+ * The clock lives in its own component so its once-a-second state update only
+ * re-renders this span. It previously sat in Footer, which meant the whole
+ * footer (including the SVG wordmark) re-rendered every second.
+ */
+function BrisbaneClock() {
   const [timeNow, setTimeNow] = useState<string>("");
 
   useEffect(() => {
@@ -22,6 +27,15 @@ export default function Footer() {
     return () => clearInterval(id);
   }, []);
 
+  // Rendered inside a span so text updates never touch the surrounding layout.
+  return (
+    <div className="text-lg" suppressHydrationWarning>
+      {timeNow}
+    </div>
+  );
+}
+
+export default function Footer() {
   return (
     <footer className=" relative mx-auto  pb-12 md:pb-0 lg:pb-0 xl:pb-0  max-w-330 bg-zinc-950 border-t border-zinc-800  text-zinc-300 overflow-hidden">
       <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-20 py-5">
@@ -30,7 +44,7 @@ export default function Footer() {
           Reach out →
         </Link>
 
-        <div className="text-lg">{timeNow}</div>
+        <BrisbaneClock />
       </div>
     </footer>
   );

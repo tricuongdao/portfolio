@@ -4,7 +4,6 @@ import React, { useEffect, useState } from "react";
 
 import { motion, AnimatePresence, useMotionValue } from "motion/react";
 import { cn } from "@/lib/utils";
-import { u } from "motion/react-client";
 import Image from "next/image";
 
 export const FollowerPointerCard = ({
@@ -30,10 +29,10 @@ export const FollowerPointerCard = ({
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (rect) {
-      const scrollX = window.scrollX;
-      const scrollY = window.scrollY;
-      x.set(e.clientX - rect.left + scrollX);
-      y.set(e.clientY - rect.top + scrollY);
+      // Offsets from the card origin. Written as transforms below, so the
+      // cursor never triggers layout the way top/left would.
+      x.set(e.clientX - rect.left);
+      y.set(e.clientY - rect.top);
     }
   };
   const handleMouseLeave = () => {
@@ -82,11 +81,10 @@ export const FollowPointer = ({
   ];
   return (
     <motion.div
-      className="absolute z-50 h-4 w-4 rounded-full"
+      className="pointer-events-none absolute left-0 top-0 z-50 h-4 w-4 rounded-full"
       style={{
-        top: y,
-        left: x,
-        pointerEvents: "none",
+        x,
+        y,
       }}
       initial={{
         scale: 1,

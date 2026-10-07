@@ -5,7 +5,6 @@ import {
   useMotionValue,
   useSpring,
   useTransform,
-  useMotionTemplate,
 } from "motion/react";
 import { cn } from "@/lib/utils";
 
@@ -50,10 +49,8 @@ export const CometCard = ({
     [`${translateDepth}px`, `-${translateDepth}px`],
   );
 
-  const glareX = useTransform(mouseXSpring, [-0.5, 0.5], [0, 100]);
-  const glareY = useTransform(mouseYSpring, [-0.5, 0.5], [0, 100]);
-
-  const glareBackground = useMotionTemplate`radial-gradient(circle at ${glareX}% ${glareY}%, rgba(255, 255, 255, 0.6) 8%, rgba(255, 255, 255, 0.35) 22%, rgba(255, 255, 255, 0) 70%)`;
+  const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["-25%", "25%"]);
+  const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["-25%", "25%"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!ref.current) return;
@@ -101,13 +98,20 @@ export const CometCard = ({
         className="group relative h-full rounded-2xl"
       >
         {children}
-        {/* Glare: only on hover, so a card at rest stays clean. */}
-        <motion.div
-          className="pointer-events-none absolute inset-0 z-50 h-full w-full rounded-[16px] opacity-0 mix-blend-overlay transition-opacity duration-300 group-hover:opacity-60"
-          style={{
-            background: glareBackground,
-          }}
-        />
+        {/* Glare: only on hover, so a card at rest stays clean. The highlight is
+            a fixed gradient that gets translated, rather than a gradient string
+            regenerated on every mousemove. */}
+        <motion.div className="pointer-events-none absolute inset-0 z-50 overflow-hidden rounded-[16px] opacity-0 mix-blend-overlay transition-opacity duration-300 group-hover:opacity-60">
+          <motion.div
+            className="absolute -left-1/4 -top-1/4 h-[150%] w-[150%]"
+            style={{
+              x: glareX,
+              y: glareY,
+              background:
+                "radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.6) 8%, rgba(255, 255, 255, 0.35) 22%, rgba(255, 255, 255, 0) 70%)",
+            }}
+          />
+        </motion.div>
       </motion.div>
     </div>
   );

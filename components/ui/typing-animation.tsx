@@ -39,9 +39,16 @@ export function TypingAnimation({
   cursorStyle = "line",
   ...props
 }: TypingAnimationProps) {
-  const MotionComponent = motion.create(Component, {
-    forwardMotionProps: true,
-  })
+  /*
+    motion.create() used to run inside the render body, so every keystroke
+    produced a brand new component type. React responded by unmounting and
+    remounting the whole span for each character. Hoisting it keeps the same
+    element identity across renders.
+  */
+  const MotionComponent = useMemo(
+    () => motion.create(Component, { forwardMotionProps: true }),
+    [Component],
+  );
 
   const [displayedText, setDisplayedText] = useState<string>("")
   const [currentWordIndex, setCurrentWordIndex] = useState(0)
@@ -51,6 +58,14 @@ export function TypingAnimation({
   const isInView = useInView(elementRef as React.RefObject<Element>, {
     amount: 0.3,
     once: true,
+  })
+  /*
+    A second, continuous visibility check. Hidden typers (the mobile header on
+    desktop, the closed drawer) report no intersection, so their timers stop
+    instead of re-rendering forever in the background.
+  */
+  const isVisible = useInView(elementRef as React.RefObject<Element>, {
+    amount: 0,
   })
 
   const wordsToAnimate = useMemo(
@@ -62,7 +77,7 @@ export function TypingAnimation({
   const typingSpeed = typeSpeed || duration
   const deletingSpeed = deleteSpeed || typingSpeed / 2
 
-  const shouldStart = startOnView ? isInView : true
+  const shouldStart = (startOnView ? isInView : true) && isVisible
 
   useEffect(() => {
     if (!shouldStart || wordsToAnimate.length === 0) return

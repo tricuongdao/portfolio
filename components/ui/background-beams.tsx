@@ -1,7 +1,19 @@
 "use client";
-import React from "react";
-import { motion } from "motion/react";
+import React, { useMemo } from "react";
 import { cn } from "@/lib/utils";
+
+/**
+ * Deterministic pseudo-random in [0, 1) derived from an index.
+ *
+ * The beam timings must be identical on the server and the client, otherwise
+ * hydration mismatches and every re-render restarts the animation (the old
+ * Math.random() calls in render did exactly that). A hash keeps them stable
+ * and still gives every beam its own rhythm.
+ */
+function seededRandom(index: number, salt: number): number {
+  const x = Math.sin(index * 127.1 + salt * 311.7) * 43758.5453;
+  return x - Math.floor(x);
+}
 
 export const BackgroundBeams = React.memo(
   ({ className }: { className?: string }) => {
@@ -57,6 +69,19 @@ export const BackgroundBeams = React.memo(
       "M-44 -573C-44 -573 24 -168 488 -41C952 86 1020 491 1020 491",
       "M-37 -581C-37 -581 31 -176 495 -49C959 78 1027 483 1027 483",
     ];
+
+    // Per-beam timing, computed once and identical on server and client.
+    const timings = useMemo(
+      () =>
+        paths.map((_, index) => ({
+          duration: seededRandom(index, 1) * 10 + 10,
+          delay: seededRandom(index, 2) * 10,
+          y2End: 93 + seededRandom(index, 3) * 8,
+        })),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [],
+    );
+
     return (
       <div
         className={cn(
@@ -80,46 +105,67 @@ export const BackgroundBeams = React.memo(
           ></path>
 
           {paths.map((path, index) => (
-            <motion.path
+            <path
               key={`path-` + index}
               d={path}
               stroke={`url(#linearGradient-${index})`}
               strokeOpacity="0.4"
               strokeWidth="0.5"
-            ></motion.path>
+            />
           ))}
           <defs>
             {paths.map((path, index) => (
-              <motion.linearGradient
-                id={`linearGradient-${index}`}
-                key={`gradient-${index}`}
-                initial={{
-                  x1: "0%",
-                  x2: "0%",
-                  y1: "0%",
-                  y2: "0%",
-                }}
-                animate={{
-                  x1: ["0%", "100%"],
-                  x2: ["0%", "95%"],
-                  y1: ["0%", "100%"],
-                  y2: ["0%", `${93 + Math.random() * 8}%`],
-                }}
-                transition={{
-                  duration: Math.random() * 10 + 10,
-                  ease: "easeInOut",
-                  repeat: Infinity,
-                  delay: Math.random() * 10,
-                }}
-              >
-               <stop stopColor="#EAB308" stopOpacity="0" />   {/* green fade-in */}
-               <stop stopColor="#FACC15" />                  {/* emerald green */}
-               <stop offset="32.5%" stopColor="#22C55E" />   {/* rich yellow */}
-               <stop offset="100%" stopColor="#22C55E" stopOpacity="0" /> {/* soft yellow fade-out */}
-
-
-                
-              </motion.linearGradient>
+              <linearGradient id={`linearGradient-${index}`} key={`gradient-${index}`}>
+                {/*
+                  SMIL rather than a Motion animation: the browser drives these
+                  natively, so 50 sweeping beams cost no JavaScript and no
+                  per-frame attribute writes from React.
+                */}
+                <animate
+                  attributeName="x1"
+                  values="0%;100%"
+                  dur={`${timings[index].duration}s`}
+                  begin={`${timings[index].delay}s`}
+                  calcMode="spline"
+                  keyTimes="0;1"
+                  keySplines="0.42 0 0.58 1"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="x2"
+                  values="0%;95%"
+                  dur={`${timings[index].duration}s`}
+                  begin={`${timings[index].delay}s`}
+                  calcMode="spline"
+                  keyTimes="0;1"
+                  keySplines="0.42 0 0.58 1"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="y1"
+                  values="0%;100%"
+                  dur={`${timings[index].duration}s`}
+                  begin={`${timings[index].delay}s`}
+                  calcMode="spline"
+                  keyTimes="0;1"
+                  keySplines="0.42 0 0.58 1"
+                  repeatCount="indefinite"
+                />
+                <animate
+                  attributeName="y2"
+                  values={`0%;${timings[index].y2End}%`}
+                  dur={`${timings[index].duration}s`}
+                  begin={`${timings[index].delay}s`}
+                  calcMode="spline"
+                  keyTimes="0;1"
+                  keySplines="0.42 0 0.58 1"
+                  repeatCount="indefinite"
+                />
+                <stop stopColor="#EAB308" stopOpacity="0" />
+                <stop stopColor="#FACC15" />
+                <stop offset="32.5%" stopColor="#22C55E" />
+                <stop offset="100%" stopColor="#22C55E" stopOpacity="0" />
+              </linearGradient>
             ))}
 
             <radialGradient

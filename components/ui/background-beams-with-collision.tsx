@@ -1,8 +1,8 @@
 "use client";
 
 import { cn } from "@/lib/utils";
-import { motion, AnimatePresence } from "motion/react";
-import React, { useRef, useState, useEffect } from "react";
+import { AnimatePresence } from "motion/react";
+import React, { useRef, useState, useEffect, useMemo } from "react";
 
 export const BackgroundBeamsWithCollision = ({
   children = null,
@@ -128,37 +128,68 @@ const CollisionMechanism = React.forwardRef<
   const [cycleCollisionDetected, setCycleCollisionDetected] = useState(false);
 
   useEffect(() => {
+    let containerRect: DOMRect | null = null;
+    let parentRect: DOMRect | null = null;
+    let isVisible = true;
+
+    // The container and parent never move while the section is on screen, so
+    // measure them once instead of on every tick.
+    const measureStaticRects = () => {
+      containerRect = containerRef.current?.getBoundingClientRect() ?? null;
+      parentRect = parentRef.current?.getBoundingClientRect() ?? null;
+    };
+    measureStaticRects();
+
     const checkCollision = () => {
       if (
-        beamRef.current &&
-        containerRef.current &&
-        parentRef.current &&
-        !cycleCollisionDetected
+        !isVisible ||
+        cycleCollisionDetected ||
+        !beamRef.current ||
+        !containerRect ||
+        !parentRect
       ) {
-        const beamRect = beamRef.current.getBoundingClientRect();
-        const containerRect = containerRef.current.getBoundingClientRect();
-        const parentRect = parentRef.current.getBoundingClientRect();
+        return;
+      }
 
-        if (beamRect.bottom >= containerRect.top) {
-          const relativeX =
-            beamRect.left - parentRect.left + beamRect.width / 2;
-          const relativeY = beamRect.bottom - parentRect.top;
+      // One geometry read per tick instead of three.
+      const beamRect = beamRef.current.getBoundingClientRect();
 
-          setCollision({
-            detected: true,
-            coordinates: {
-              x: relativeX,
-              y: relativeY,
-            },
-          });
-          setCycleCollisionDetected(true);
-        }
+      if (beamRect.bottom >= containerRect.top) {
+        const relativeX = beamRect.left - parentRect.left + beamRect.width / 2;
+        const relativeY = beamRect.bottom - parentRect.top;
+
+        setCollision({
+          detected: true,
+          coordinates: { x: relativeX, y: relativeY },
+        });
+        setCycleCollisionDetected(true);
       }
     };
 
-    const animationInterval = setInterval(checkCollision, 50);
+    // 100ms is plenty for a beam that takes seconds to fall, and it keeps the
+    // forced layout reads away from the frame the user is scrolling on.
+    const animationInterval = setInterval(checkCollision, 100);
 
-    return () => clearInterval(animationInterval);
+    const observer =
+      typeof IntersectionObserver !== "undefined" && parentRef.current
+        ? new IntersectionObserver(
+            ([entry]) => {
+              isVisible = entry.isIntersecting;
+              if (isVisible) measureStaticRects();
+            },
+            { rootMargin: "100px" },
+          )
+        : null;
+    observer?.observe(parentRef.current!);
+
+    const handleResize = () => measureStaticRects();
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      clearInterval(animationInterval);
+      observer?.disconnect();
+      window.removeEventListener("resize", handleResize);
+    };
   }, [cycleCollisionDetected, containerRef, parentRef]);
 
   useEffect(() => {
@@ -174,36 +205,63 @@ const CollisionMechanism = React.forwardRef<
     }
   }, [collision]);
 
+  /*
+    The falling beam is a pure translateY. Driving it with the Web Animations
+    API instead of Motion takes it off the JavaScript main thread entirely:
+    previously each of the seven beams wrote an inline transform every frame.
+    Motion's duration/repeatDelay pair is reproduced by holding the end
+    position for the remainder of the cycle.
+  */
+  useEffect(() => {
+    const beam = beamRef.current;
+    if (!beam || typeof beam.animate !== "function") return;
+
+    const fall = (beamOptions.duration || 8) * 1000;
+    const hold = (beamOptions.repeatDelay || 0) * 1000;
+    const fromY = beamOptions.initialY ?? -200;
+    const toY = beamOptions.translateY ?? 1800;
+    // initialX positions the beam horizontally and never changes, so it rides
+    // along in every keyframe.
+    const x = beamOptions.initialX ?? 0;
+
+    const animation = beam.animate(
+      [
+        { transform: `translateX(${x}px) translateY(${fromY}px)`, offset: 0 },
+        { transform: `translateX(${x}px) translateY(${toY}px)`, offset: fall / (fall + hold) },
+        { transform: `translateX(${x}px) translateY(${toY}px)`, offset: 1 },
+      ],
+      {
+        duration: fall + hold,
+        delay: (beamOptions.delay || 0) * 1000,
+        iterations: Infinity,
+        easing: "linear",
+        fill: "both",
+      },
+    );
+
+    return () => animation.cancel();
+  }, [
+    beamKey,
+    beamOptions.duration,
+    beamOptions.repeatDelay,
+    beamOptions.delay,
+    beamOptions.initialX,
+    beamOptions.initialY,
+    beamOptions.translateY,
+  ]);
+
   return (
     <>
-      <motion.div
+      <div
         key={beamKey}
         ref={beamRef}
-        animate="animate"
-        initial={{
-          translateY: beamOptions.initialY || "-200px",
-          translateX: beamOptions.initialX || "0px",
-          rotate: beamOptions.rotate || 0,
-        }}
-        variants={{
-          animate: {
-            translateY: beamOptions.translateY || "1800px",
-            translateX: beamOptions.translateX || "0px",
-            rotate: beamOptions.rotate || 0,
-          },
-        }}
-        transition={{
-          duration: beamOptions.duration || 8,
-          repeat: Infinity,
-          repeatType: "loop",
-          ease: "linear",
-          delay: beamOptions.delay || 0,
-          repeatDelay: beamOptions.repeatDelay || 0,
-        }}
         className={cn(
           "absolute left-0 top-20 m-auto h-14 w-px rounded-full bg-gradient-to-t from-yellow-500 via-green-500 to-transparent",
           beamOptions.className,
         )}
+        style={{
+          transform: `translateX(${beamOptions.initialX ?? 0}px) translateY(${beamOptions.initialY ?? -200}px)`,
+        }}
       />
       <AnimatePresence>
         {collision.detected && collision.coordinates && (
@@ -225,34 +283,38 @@ const CollisionMechanism = React.forwardRef<
 CollisionMechanism.displayName = "CollisionMechanism";
 
 const Explosion = ({ ...props }: React.HTMLProps<HTMLDivElement>) => {
-  const spans = Array.from({ length: 20 }, (_, index) => ({
-    id: index,
-    initialX: 0,
-    initialY: 0,
-    directionX: Math.floor(Math.random() * 80 - 40),
-    directionY: Math.floor(Math.random() * -50 - 10),
-  }));
+  /*
+    The sparks used to be 20 Motion spans each animating x, y and opacity from
+    JavaScript: roughly 1,900 inline-style writes per second while an explosion
+    played. They are pure scatter-and-fade motion, so CSS keyframes on
+    transform/opacity now drive them on the compositor with zero JS per frame.
+    Values are generated once per explosion, not on every render.
+  */
+  const spans = useMemo(
+    () =>
+      Array.from({ length: 12 }, (_, index) => ({
+        id: index,
+        directionX: Math.floor(Math.random() * 80 - 40),
+        directionY: Math.floor(Math.random() * -50 - 10),
+        duration: Math.random() * 1.5 + 0.5,
+      })),
+    [],
+  );
 
   return (
     <div {...props} className={cn("absolute z-50 h-2 w-2", props.className)}>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-        className="absolute -inset-x-10 top-0 m-auto h-2 w-10 rounded-full bg-gradient-to-r from-transparent via-green-500 to-transparent blur-sm"
-      ></motion.div>
+      <div className="animate-explosion-flash absolute -inset-x-10 top-0 m-auto h-2 w-10 rounded-full bg-gradient-to-r from-transparent via-green-500 to-transparent blur-sm" />
       {spans.map((span) => (
-        <motion.span
+        <span
           key={span.id}
-          initial={{ x: span.initialX, y: span.initialY, opacity: 1 }}
-          animate={{
-            x: span.directionX,
-            y: span.directionY,
-            opacity: 0,
-          }}
-          transition={{ duration: Math.random() * 1.5 + 0.5, ease: "easeOut" }}
-          className="absolute h-1 w-1 rounded-full bg-gradient-to-b from-green-300 to-green-500"
+          className="animate-spark-scatter absolute h-1 w-1 rounded-full bg-gradient-to-b from-green-300 to-green-500"
+          style={
+            {
+              "--spark-x": `${span.directionX}px`,
+              "--spark-y": `${span.directionY}px`,
+              "--spark-duration": `${span.duration}s`,
+            } as React.CSSProperties
+          }
         />
       ))}
     </div>

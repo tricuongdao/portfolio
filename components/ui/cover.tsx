@@ -1,9 +1,24 @@
 "use client";
-import React, { useEffect, useId, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AnimatePresence, motion } from "motion/react";
 import { useRef } from "react";
+import dynamic from "next/dynamic";
 import { cn } from "@/lib/utils";
-import { SparklesCore } from "@/components/ui/sparkles";
+
+/**
+ * The particle engine is ~150 KB and only ever shows on hover, so keep it out
+ * of the initial bundle and pull it in the first time the cover is hovered.
+ */
+const SparklesCore = dynamic(
+  () => import("@/components/ui/sparkles").then((mod) => mod.SparklesCore),
+  { ssr: false },
+);
+
+/** Stable pseudo-random in [0, 1) so beams keep their rhythm across renders. */
+function seededRandom(index: number, salt: number): number {
+  const x = Math.sin(index * 91.7 + salt * 47.3) * 43758.5453;
+  return x - Math.floor(x);
+}
 
 export const Cover = ({
   children,
@@ -90,8 +105,9 @@ export const Cover = ({
         <Beam
           key={index}
           hovered={hovered}
-          duration={Math.random() * 2 + 1}
-          delay={Math.random() * 2 + 1}
+          index={index}
+          duration={seededRandom(index, 1) * 2 + 1}
+          delay={seededRandom(index, 2) * 2 + 1}
           width={containerWidth}
           style={{
             top: `${position}px`,
@@ -151,62 +167,40 @@ export const Beam = ({
   duration,
   hovered,
   width = 600,
-  ...svgProps
+  index = 0,
+  ...divProps
 }: {
   className?: string;
   delay?: number;
   duration?: number;
   hovered?: boolean;
   width?: number;
-} & React.ComponentProps<typeof motion.svg>) => {
-  const id = useId();
+  index?: number;
+} & React.ComponentProps<"div">) => {
+  /*
+    Previously an SVG whose gradient coordinates were animated from
+    JavaScript: four attribute writes per beam per frame, ~860 per second on
+    the home page. A translated gradient does the same sweep on the
+    compositor with no JS at all.
+  */
+  const sweepDuration = hovered ? 0.5 : duration ?? 2;
+  const sweepDelay = hovered ? index * 0.12 : delay ?? 1;
 
   return (
-    <motion.svg
-      width={width ?? "600"}
-      height="1"
-      viewBox={`0 0 ${width ?? "600"} 1`}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={cn("absolute inset-x-0 w-full", className)}
-      {...svgProps}
+    <div
+      className={cn("pointer-events-none absolute inset-x-0 h-px overflow-hidden", className)}
+      {...divProps}
     >
-      <motion.path
-        d={`M0 0.5H${width ?? "600"}`}
-        stroke={`url(#svgGradient-${id})`}
+      <div
+        className="animate-beam-sweep h-px w-1/3 bg-linear-to-r from-transparent via-[#57f63b] to-transparent"
+        style={
+          {
+            "--beam-duration": `${sweepDuration}s`,
+            "--beam-delay": `${sweepDelay}s`,
+          } as React.CSSProperties
+        }
       />
-
-      <defs>
-        <motion.linearGradient
-          id={`svgGradient-${id}`}
-          key={String(hovered)}
-          gradientUnits="userSpaceOnUse"
-          initial={{
-            x1: "0%",
-            x2: hovered ? "-10%" : "-5%",
-            y1: 0,
-            y2: 0,
-          }}
-          animate={{
-            x1: "110%",
-            x2: hovered ? "100%" : "105%",
-            y1: 0,
-            y2: 0,
-          }}
-          transition={{
-            duration: hovered ? 0.5 : duration ?? 2,
-            ease: "linear",
-            repeat: Infinity,
-            delay: hovered ? Math.random() * (1 - 0.2) + 0.2 : 0,
-            repeatDelay: hovered ? Math.random() * (2 - 1) + 1 : delay ?? 1,
-          }}
-        >
-          <stop stopColor="#2edfb6" stopOpacity="0" />
-          <stop stopColor="#57f63b" />
-          <stop offset="1" stopColor="#57f63b" stopOpacity="0" />
-        </motion.linearGradient>
-      </defs>
-    </motion.svg>
+    </div>
   );
 };
 

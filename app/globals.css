@@ -19,3 +19,108 @@
     transform: translate(-50%, -40%) scale(1);
   }
 }
+
+/*
+  Beam-collision sparks. Kept in CSS so the explosion runs on the compositor
+  instead of writing inline styles from JavaScript every frame.
+*/
+@keyframes spark-scatter {
+  from {
+    transform: translate(0, 0);
+    opacity: 1;
+  }
+  to {
+    transform: translate(var(--spark-x, 0), var(--spark-y, 0));
+    opacity: 0;
+  }
+}
+
+@keyframes explosion-flash {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-spark-scatter {
+  animation: spark-scatter var(--spark-duration, 1s) ease-out forwards;
+  will-change: transform, opacity;
+}
+
+.animate-explosion-flash {
+  animation: explosion-flash 1.5s ease-out forwards;
+}
+
+/*
+  Light sweep for the cover beams. The old version animated SVG gradient
+  coordinates from JavaScript (four attribute writes per beam per frame); a
+  translated gradient is composited instead.
+*/
+@keyframes beam-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(300%);
+  }
+}
+
+.animate-beam-sweep {
+  animation: beam-sweep var(--beam-duration, 2s) linear infinite;
+  animation-delay: var(--beam-delay, 0s);
+  will-change: transform;
+}
+
+/*
+  Footer wordmark stroke draw. stroke-dashoffset is a CSS property, so this no
+  longer needs a JavaScript animation on every page load.
+*/
+@keyframes text-stroke-draw {
+  from {
+    stroke-dashoffset: 1000;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.animate-text-stroke-draw {
+  stroke-dasharray: 1000;
+  animation: text-stroke-draw 4s ease-in-out forwards;
+}
+
+/*
+  Contact page backdrop. Replaces 15,000 DOM cells: the 64x32 grid lines and
+  the "+" marks (every other intersection) are painted as repeating
+  backgrounds on one element.
+*/
+.boxes-grid {
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='128' height='64' viewBox='0 0 128 64'%3E%3Cpath d='M64 26v12M58 32h12' stroke='%2327272a' stroke-width='1' stroke-linecap='round'/%3E%3C/svg%3E"),
+    linear-gradient(to right, #18181b 1px, transparent 1px),
+    linear-gradient(to bottom, #18181b 1px, transparent 1px);
+  background-size:
+    128px 64px,
+    64px 32px,
+    64px 32px;
+  background-position:
+    -64px -32px,
+    0 0,
+    0 0;
+  background-repeat: repeat;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-spark-scatter,
+  .animate-explosion-flash,
+  .animate-beam-sweep,
+  .animate-text-stroke-draw {
+    animation: none;
+  }
+
+  .animate-text-stroke-draw {
+    stroke-dashoffset: 0;
+  }
+}

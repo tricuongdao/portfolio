@@ -90,25 +90,16 @@ export const TextHoverEffect = ({
       >
         {text}
       </text>
-      <motion.text
+      <text
         x="50%"
         y="50%"
         textAnchor="middle"
         dominantBaseline="middle"
         strokeWidth="0.3"
-        className="fill-transparent stroke-neutral-600 font-[helvetica] text-7xl font-bold dark:stroke-neutral-800"
-        initial={{ strokeDashoffset: 1000, strokeDasharray: 1000 }}
-        animate={{
-          strokeDashoffset: 0,
-          strokeDasharray: 1000,
-        }}
-        transition={{
-          duration: 4,
-          ease: "easeInOut",
-        }}
+        className="animate-text-stroke-draw fill-transparent stroke-neutral-600 font-[helvetica] text-7xl font-bold dark:stroke-neutral-800"
       >
         {text}
-      </motion.text>
+      </text>
       <text
         x="50%"
         y="50%"
