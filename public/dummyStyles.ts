@@ -342,7 +342,7 @@ export const styles = {
 
 export const certificatesPageStyles = {
   // Layout and container styles
-  pageContainer: "relative flex min-h-screen w-full justify-center bg-zinc-950 pt-20 xl:pt-16 px-6 py-12 md:px-12 md:py-20 lg:px-16",
+  pageContainer: "relative flex min-h-screen w-full justify-center bg-zinc-950 pt-20 px-6 py-12 md:px-12 md:py-20 lg:px-16",
   contentContainer: "w-full max-w-full",
 
   // Header
@@ -366,16 +366,18 @@ export const certificatesPageStyles = {
   emptyState: "col-span-full rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/20 p-10 text-center text-sm text-zinc-500",
 
   // Certificate card
-  certificateCard: "group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-2xl p-4 text-left transition-all duration-300 hover:bg-zinc-900/40 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
+  certificateCard: "group relative flex h-full w-full cursor-pointer flex-col overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/40 p-5 text-left transition-colors duration-300 hover:border-zinc-700 hover:bg-zinc-900/70 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500",
   certificateCardShimmer: "pointer-events-none absolute inset-0 -translate-x-full bg-linear-to-r from-transparent via-white/5 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-full",
   certificateCardTop: "mb-4 flex items-start justify-between gap-3",
   certificateIconContainer: "relative flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-xl bg-linear-to-br from-zinc-800 to-zinc-950 ring-1 ring-white/10",
   certificateIcon: "h-6 w-6 text-zinc-300 transition-transform duration-300 group-hover:scale-110",
   certificateIconGlow: "absolute inset-0 rounded-xl bg-linear-to-br from-white/10 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100",
   certificateTypeBadge: "whitespace-nowrap rounded-full border px-2.5 py-1 text-[11px] font-medium",
-  certificateTitle: "text-base font-semibold text-zinc-100 transition-colors group-hover:text-zinc-50",
-  certificateIssuer: "mt-1 text-xs text-zinc-500 transition-colors group-hover:text-zinc-400",
-  certificateDescription: "mt-3 line-clamp-2 text-sm leading-relaxed text-zinc-400",
+  // Title, issuer and description reserve their full height so the rows below
+  // them line up across every card in a row.
+  certificateTitle: "line-clamp-2 min-h-12 text-base font-semibold text-zinc-100 transition-colors group-hover:text-zinc-50",
+  certificateIssuer: "mt-1 line-clamp-2 min-h-8 text-xs text-zinc-500 transition-colors group-hover:text-zinc-400",
+  certificateDescription: "mt-3 line-clamp-2 min-h-10 text-sm leading-5 text-zinc-400",
   certificateMetaList: "mt-4 space-y-2 border-t border-zinc-800/80 pt-4",
   certificateMetaRow: "flex items-center justify-between gap-4 text-xs",
   certificateMetaLabel: "text-zinc-500",
@@ -385,9 +387,11 @@ export const certificatesPageStyles = {
   certificateStatusExpired: "inline-flex items-center gap-1.5 rounded-full bg-zinc-800 px-2 py-0.5 text-[11px] font-medium text-zinc-400",
   certificateStatusDotActive: "h-1.5 w-1.5 rounded-full bg-emerald-400",
   certificateStatusDotExpired: "h-1.5 w-1.5 rounded-full bg-zinc-500",
-  certificateSkills: "mt-4 flex flex-wrap gap-1.5",
-  certificateSkill: "rounded-md border border-zinc-800 bg-zinc-900/60 px-2 py-1 text-[11px] text-zinc-400",
-  certificateCardFooter: "mt-5 flex items-center justify-between gap-3 border-t border-zinc-800/80 pt-4",
+  certificateSkills: "mt-4 mb-5 flex flex-wrap gap-1.5",
+  certificateSkill: "rounded-md border border-zinc-800 bg-zinc-950/60 px-2 py-1 text-[11px] text-zinc-400",
+  // mt-auto pins the footer to the bottom, so every "View certificate" bar in a
+  // row sits on the same line even when the skill chips wrap differently.
+  certificateCardFooter: "mt-auto flex items-center justify-between gap-3 border-t border-zinc-800/80 pt-4",
   certificateCardFooterText: "text-sm font-medium text-zinc-300 transition-colors group-hover:text-zinc-100",
   certificateCardFooterIcon: "h-4 w-4 text-zinc-500 transition-all duration-300 group-hover:translate-x-1 group-hover:text-zinc-200",
 };

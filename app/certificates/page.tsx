@@ -104,12 +104,13 @@ export default function CertificatesPage() {
               <motion.div
                 key={certificate.slug}
                 layout
+                className="h-full"
                 initial={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: 18, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={prefersReducedMotion ? { opacity: 0 } : { opacity: 0, y: -10, scale: 0.97 }}
                 transition={cardTransition(index)}
               >
-                <CometCard>
+                <CometCard className="h-full">
                   <CertificateCard
                     certificate={certificate}
                     onOpen={() => setSelectedCertificate(certificate)}
