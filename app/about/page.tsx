@@ -105,7 +105,7 @@ export default function AboutPage() {
                 <h2 className={aboutPageStyles.sectionHeading}>Vision</h2>
                 <p className={aboutPageStyles.paragraph}>
                   I believe in building software that is reliable, well-tested, and delivered on time. 
-                  Whether it's a task manager or a client's web app, I bring the same attention to detail 
+                  Whether it's a client's landing page or a full online store, I bring the same attention to detail 
                   that keeps a law firm running smoothly.
                 </p>
               </section>

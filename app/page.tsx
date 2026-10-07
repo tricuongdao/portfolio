@@ -104,15 +104,16 @@ export default function HomePage() {
                   <span>Featured Work</span>
                 </div>
                 <h3 className={homePageStyles.article.title}>
-                  Flow Mate — Full-stack Task Manager
+                  The Web Bistro — Full-stack 3D Studio Site
                 </h3>
                 <p className={homePageStyles.article.description}>
-                  A task manager I built on both sides of the wire, from the Mongoose schema to the React view.
+                  My freelance web studio, dressed as a restaurant: a wordmark extruded from real
+                  type, two three.js scenes, and every page served in English and Tiếng Việt.
                 </p>
 
                 <div className={homePageStyles.article.linkContainer}>
                   <a
-                    href="https://flowmate-6x0c.onrender.com/"
+                    href="https://the-web-bistro.vercel.app"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={homePageStyles.article.link}
@@ -134,7 +135,7 @@ export default function HomePage() {
                     </svg>
                   </a>
                   <a
-                    href="https://github.com/tricuongdao/FlowMate"
+                    href="https://github.com/tricuongdao/the-web-bistro"
                     target="_blank"
                     rel="noopener noreferrer"
                     className={homePageStyles.article.link}
