@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { motion, AnimatePresence, useMotionValue } from "motion/react";
 import { cn } from "@/lib/utils";
@@ -18,16 +18,13 @@ export const FollowerPointerCard = ({
   const x = useMotionValue(0);
   const y = useMotionValue(0);
   const ref = React.useRef<HTMLDivElement>(null);
-  const [rect, setRect] = useState<DOMRect | null>(null);
-  const [isInside, setIsInside] = useState<boolean>(false); // Add this line
-
-  useEffect(() => {
-    if (ref.current) {
-      setRect(ref.current.getBoundingClientRect());
-    }
-  }, []);
+  // Measured on enter instead of once on mount: a cached viewport rect is
+  // stale as soon as the page is scrolled.
+  const rectRef = React.useRef<DOMRect | null>(null);
+  const [isInside, setIsInside] = useState<boolean>(false);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = rectRef.current;
     if (rect) {
       // Offsets from the card origin. Written as transforms below, so the
       // cursor never triggers layout the way top/left would.
@@ -40,6 +37,7 @@ export const FollowerPointerCard = ({
   };
 
   const handleMouseEnter = () => {
+    rectRef.current = ref.current?.getBoundingClientRect() ?? null;
     setIsInside(true);
   };
   return (
@@ -47,6 +45,8 @@ export const FollowerPointerCard = ({
       onMouseLeave={handleMouseLeave}
       onMouseEnter={handleMouseEnter}
       onMouseMove={handleMouseMove}
+      // This card draws its own follower, so the site-wide cursor steps aside.
+      data-cursor="none"
       style={{
         cursor: "none",
       }}

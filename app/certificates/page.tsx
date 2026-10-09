@@ -147,6 +147,7 @@ function CertificateCard({
       onClick={onOpen}
       className={s.certificateCard}
       aria-label={`View ${certificate.title} certificate`}
+      data-cursor-label="View"
       style={{ transformStyle: "preserve-3d" }}
     >
       <span className={s.certificateCardShimmer} />

@@ -626,3 +626,31 @@ export const sidebarStyles = {
   bottomMenuButton: "p-2 rounded-lg text-zinc-400 hover:text-zinc-200 hover:bg-zinc-800/50 transition-colors",
   bottomMenuIcon: "w-4 h-4",
 };
+
+/**
+ * Custom cursor (components/ui/custom-cursor.tsx).
+ *
+ * Two nodes: a dot that tracks the pointer 1:1 and a ring that trails it and
+ * reacts to whatever is underneath (links, text fields, labelled targets).
+ * Both positions are written as transforms from a single rAF loop, so nothing
+ * here triggers layout. Sizes are mirrored by DOT_SIZE / RING_SIZE in the
+ * component — change them together.
+ *
+ * Contrast note: the ring is a light border plus a dark outer shadow so it
+ * stays visible on both the zinc-950 background and the white buttons/modals.
+ */
+export const customCursorStyles = {
+  dot: "pointer-events-none fixed left-0 top-0 z-[10000] h-1.5 w-1.5 rounded-full bg-zinc-100 ring-1 ring-zinc-950/60 select-none will-change-transform",
+
+  // Wrapper is exactly ring-sized; its centre sits on the pointer.
+  ringWrapper: "pointer-events-none fixed left-0 top-0 z-[9999] h-8 w-8 select-none will-change-transform",
+
+  // State layer: hover/press scaling lives here so CSS can transition it.
+  ringShape: "cursor-state h-full w-full",
+  ringBody: "h-full w-full rounded-full border border-zinc-100/70 shadow-[0_0_0_1px_rgba(9,9,11,0.45)]",
+  ringBodyActive: "border-zinc-100/90 bg-zinc-100/10",
+
+  // Label + caret replace the ring on labelled targets and text fields.
+  pill: "cursor-pill pointer-events-none absolute left-1/2 top-1/2 rounded-full bg-zinc-100 px-3 py-1 text-[11px] leading-none font-semibold tracking-[0.14em] whitespace-nowrap text-zinc-950 uppercase shadow-[0_2px_12px_rgba(0,0,0,0.45)]",
+  caret: "cursor-caret pointer-events-none absolute left-1/2 top-1/2 h-5 w-[1.5px] rounded-full bg-zinc-100 shadow-[0_0_0_1px_rgba(9,9,11,0.45)]",
+};

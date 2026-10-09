@@ -4,6 +4,7 @@ import { Geist } from "next/font/google";
 import "./globals.css";
 import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
+import { CustomCursor } from "@/components/ui/custom-cursor";
 
 const geistSans = Geist({
   subsets: ["latin"],
@@ -50,6 +51,9 @@ export default function RootLayout({
             <Footer />
           </div>
         </div>
+
+        {/* Custom cursor - renders only for fine pointers */}
+        <CustomCursor />
       </body>
     </html>
   );
