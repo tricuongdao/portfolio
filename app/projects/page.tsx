@@ -2,7 +2,6 @@
 
 import React from "react";
 import { useRouter } from "next/navigation";
-import { FollowerPointerCard } from "@/components/ui/following-pointer";
 import { projects, Project } from "@/lib/projects-data";
 import { projectStyles as s } from "@/public/dummyStyles";
 
@@ -18,12 +17,7 @@ export default function ProjectsPage() {
         {/* Projects Grid */}
         <div className={s.projectsGrid}>
           {projects.map((project) => (
-            <FollowerPointerCard
-              key={project.slug}
-              title={project.title}
-            >
-              <ProjectCard project={project} />
-            </FollowerPointerCard>
+            <ProjectCard key={project.slug} project={project} />
           ))}
         </div>
       </div>
@@ -37,6 +31,9 @@ function ProjectCard({ project }: { project: Project }) {
   return (
     <div
       className={s.projectCard}
+      // The whole card is the click target, so the site cursor labels it rather
+      // than letting the card draw a follower of its own.
+      data-cursor-label="View"
       onClick={() => {
         router.push(`/projects/${project.slug}`);
       }}

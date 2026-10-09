@@ -327,11 +327,6 @@ export const projectStyles = {
 
   // Archive text
   archivedText: "text-xs text-zinc-500",
-
-  // Title component (for follower pointer)
-  titleComponentContainer: "flex items-center space-x-2 rounded-full bg-zinc-900/90 px-3 py-1.5 shadow-lg backdrop-blur-md border border-zinc-800",
-  titleComponentAvatar: "rounded-full border border-zinc-700",
-  titleComponentText: "text-sm font-medium text-zinc-200",
 };
 
 // You can also create a combined styles object if needed

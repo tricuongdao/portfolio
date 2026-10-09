@@ -161,7 +161,19 @@ export function CustomCursor() {
         applyState("hidden");
         return;
       }
+
       const labelled = target.closest<HTMLElement>("[data-cursor-label]");
+      const interactive = target.closest(INTERACTIVE_SELECTOR);
+
+      // A control nested inside a labelled card — the "Visit" button on a
+      // project card, say — keeps its own pointer state. The label belongs to
+      // the card body, which is the click target; a control that *is* the
+      // labelled element (the certificate cards are single buttons) keeps the
+      // label.
+      if (interactive && interactive !== labelled) {
+        applyState("interactive");
+        return;
+      }
       if (labelled) {
         setLabel(labelled.dataset.cursorLabel ?? "");
         applyState("label");
@@ -169,10 +181,6 @@ export function CustomCursor() {
       }
       if (target.closest(TEXT_SELECTOR)) {
         applyState("text");
-        return;
-      }
-      if (target.closest(INTERACTIVE_SELECTOR)) {
-        applyState("interactive");
         return;
       }
       applyState("default");

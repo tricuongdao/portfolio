@@ -144,11 +144,71 @@ body.has-custom-cursor * {
     opacity 180ms ease;
 }
 
+/*
+  Project-detail beam field (components/ui/background-beams.tsx).
+
+  The beams are static; the movement is these two bands of light travelling
+  down-right across them. Each band is a fixed gradient on a pseudo-element
+  that only ever gets translated and rotated, so the browser composites it
+  without repainting — unlike the animated SVG gradients this replaced, which
+  forced a repaint of every beam on every frame.
+
+  The travel is diagonal and in vmax so it clears the viewport on every screen:
+  the band is fully off-screen at both ends of the cycle, which is what makes
+  the loop restart invisible.
+*/
+@keyframes beam-field-sweep {
+  from {
+    transform: translate3d(-60vmax, -60vmax, 0);
+  }
+  to {
+    transform: translate3d(60vmax, 60vmax, 0);
+  }
+}
+
+/*
+  The fan is deliberately not animated: an opacity animation on the svg was
+  measured at ~19ms of main-thread paint per second, because the fifty stroked
+  paths get repainted rather than the layer simply being composited. The sweeps
+  carry the movement instead — they are transforms, and cost nothing.
+*/
+.beam-field-sweep {
+  position: absolute;
+  inset: 0;
+  animation: beam-field-sweep var(--beam-sweep-duration, 18s) linear infinite;
+  animation-delay: var(--beam-sweep-delay, 0s);
+}
+
+.beam-field-sweep::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  /* Long enough to span the viewport, thin enough to read as light. */
+  width: 230vmax;
+  height: var(--beam-sweep-height, 30vmax);
+  transform: translate(-50%, -50%) rotate(135deg);
+  background: linear-gradient(
+    180deg,
+    transparent,
+    var(--beam-sweep-color, rgba(250, 204, 21, 0.07)) 50%,
+    transparent
+  );
+}
+
+.beam-field-sweep-cool {
+  --beam-sweep-color: rgba(34, 197, 94, 0.055);
+  --beam-sweep-height: 44vmax;
+  --beam-sweep-duration: 26s;
+  --beam-sweep-delay: -11s;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-spark-scatter,
   .animate-explosion-flash,
   .animate-beam-sweep,
-  .animate-text-stroke-draw {
+  .animate-text-stroke-draw,
+  .beam-field-sweep {
     animation: none;
   }
 
