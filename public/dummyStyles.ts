@@ -562,11 +562,6 @@ export const projectFilmStyles = {
   replayIcon: "h-5 w-5 md:h-6 md:w-6",
   playIconOffset: "translate-x-[2px]",
   overlayLabel: "text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-300",
-
-  // Caption under the player
-  caption: "mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-xs text-zinc-500",
-  captionTitle: "font-medium text-zinc-400",
-  captionMeta: "text-zinc-600",
 };
 
 // Add these to assets/dummyStyles.js
