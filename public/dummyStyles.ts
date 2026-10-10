@@ -302,17 +302,10 @@ export const projectStyles = {
   // Film badge — only rendered for projects that ship a film
   filmChip: "absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-zinc-950/75 px-3 py-1.5 text-[11px] leading-none font-semibold uppercase tracking-[0.14em] text-zinc-100 ring-1 ring-white/10 backdrop-blur-md",
   filmChipIcon: "h-3 w-3 fill-current",
+  // The play mark says "film" on screen, so the word is kept for screen readers
+  // only rather than sitting next to the runtime.
+  filmChipSrText: "sr-only",
   filmChipDuration: "text-zinc-400",
-
-  // Status badge
-  statusBadgeContainer: "absolute right-3 top-3",
-  statusBadge: "rounded-full px-3 py-1 text-xs font-medium backdrop-blur-md",
-  statusActive: "bg-green-500/10 text-green-400 ring-1 ring-green-500/20",
-  statusInactive: "bg-zinc-500/10 text-zinc-400 ring-1 ring-zinc-500/20",
-
-  // Bookmark button
-  bookmarkButton: "absolute right-3 top-12 rounded-full bg-zinc-950/80 p-2 opacity-0 backdrop-blur-sm transition-opacity duration-200 group-hover:opacity-100 hover:bg-zinc-900",
-  bookmarkIcon: "h-4 w-4 text-zinc-400",
 
   // Content section
   contentSection: "p-6",
