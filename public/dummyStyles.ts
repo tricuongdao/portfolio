@@ -295,8 +295,13 @@ export const projectStyles = {
   projectCard: "group relative h-full overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-2xl hover:shadow-zinc-950/50",
 
   // Image container
-  imageContainer: "relative aspect-[16/10] w-full overflow-hidden bg-zinc-800",
+  imageContainer: "relative aspect-video w-full overflow-hidden bg-zinc-800",
   projectImage: "h-full w-full transform object-cover transition-transform duration-500 group-hover:scale-105",
+
+  // Film badge — only rendered for projects that ship a film
+  filmChip: "absolute bottom-3 left-3 inline-flex items-center gap-1.5 rounded-full bg-zinc-950/75 px-3 py-1.5 text-[11px] leading-none font-semibold uppercase tracking-[0.14em] text-zinc-100 ring-1 ring-white/10 backdrop-blur-md",
+  filmChipIcon: "h-3 w-3 fill-current",
+  filmChipDuration: "text-zinc-400",
 
   // Status badge
   statusBadgeContainer: "absolute right-3 top-3",
@@ -476,8 +481,10 @@ export const projectDetailStyles = {
   buttonIcon: "h-4 w-4",
 
   // Project image
-  imageContainer: "mb-12 rounded-2xl overflow-hidden border border-zinc-800",
-  projectImage: "w-full h-auto aspect-video object-cover",
+  figure: "overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/50",
+  figureImage: "h-auto w-full aspect-video object-cover object-top",
+  figureCaption: "flex flex-wrap items-center justify-between gap-2 border-t border-zinc-800 px-4 py-3 text-xs text-zinc-500",
+  figureCaptionLink: "font-medium text-zinc-400 underline-offset-4 transition-colors hover:text-zinc-200 hover:underline",
 
   // Main grid
   gridContainer: "grid grid-cols-1 lg:grid-cols-3 gap-8",
@@ -525,6 +532,41 @@ export const projectDetailStyles = {
   authorAvatar: "h-8 w-8 rounded-full border border-zinc-700",
   authorName: "text-zinc-300",
   projectInfoText: "text-zinc-300 capitalize",
+};
+
+// Add these to assets/dummyStyles.js
+
+/*
+  Project film player (components/ui/project-film.tsx).
+
+  The player is a normal <video> with native controls. The overlay below is only
+  a cover for the poster frame, so a visitor sees one obvious play button
+  instead of a control bar, and once the film is running the browser's own
+  controls take over.
+*/
+export const projectFilmStyles = {
+  // Section wrapper
+  figure: "mb-12",
+  frame: "relative overflow-hidden rounded-2xl border border-zinc-800 bg-black shadow-2xl shadow-zinc-950/50",
+
+  // The video keeps a fixed 16:9 box so the poster, the film and the layout all
+  // agree on the aspect ratio and nothing shifts when playback starts.
+  video: "block aspect-video h-full w-full object-cover",
+
+  // Poster cover. A light scrim only: the poster is the film's own title card,
+  // so it is left close to how it was designed and the button carries the call
+  // to action.
+  overlay: "absolute inset-0 flex flex-col items-center justify-center gap-4 bg-zinc-950/30",
+  playButton: "group flex h-16 w-16 items-center justify-center rounded-full bg-zinc-100 text-zinc-900 shadow-[0_10px_40px_rgba(0,0,0,0.55)] transition-transform duration-300 hover:scale-105 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-zinc-100 motion-reduce:transition-none motion-reduce:hover:scale-100 md:h-20 md:w-20",
+  playIcon: "h-6 w-6 fill-current md:h-7 md:w-7",
+  replayIcon: "h-5 w-5 md:h-6 md:w-6",
+  playIconOffset: "translate-x-[2px]",
+  overlayLabel: "text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-300",
+
+  // Caption under the player
+  caption: "mt-3 flex flex-wrap items-center gap-x-3 gap-y-1 px-1 text-xs text-zinc-500",
+  captionTitle: "font-medium text-zinc-400",
+  captionMeta: "text-zinc-600",
 };
 
 // Add these to assets/dummyStyles.js

@@ -1,8 +1,10 @@
 "use client";
 
 import React from "react";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { projects, Project } from "@/lib/projects-data";
+import { Play } from "lucide-react";
+import { projects, getProjectPoster, Project } from "@/lib/projects-data";
 import { projectStyles as s } from "@/public/dummyStyles";
 
 export default function ProjectsPage() {
@@ -40,9 +42,12 @@ function ProjectCard({ project }: { project: Project }) {
     >
       {/* Image Container */}
       <div className={s.imageContainer}>
-        <img
-          src={project.image}
+        <Image
+          src={getProjectPoster(project)}
           alt={project.title}
+          fill
+          // Cards run one-up on phones, two-up from lg, three-up from xl.
+          sizes="(max-width: 1024px) 100vw, (max-width: 1280px) 50vw, 33vw"
           className={s.projectImage}
         />
         {/* Status Badge */}
@@ -55,6 +60,15 @@ function ProjectCard({ project }: { project: Project }) {
             {project.status}
           </span>
         </div>
+
+        {/* Film badge — tells the visitor there is a film inside the project */}
+        {project.film && (
+          <div className={s.filmChip}>
+            <Play className={s.filmChipIcon} aria-hidden="true" />
+            <span>Film</span>
+            <span className={s.filmChipDuration}>{project.film.duration}</span>
+          </div>
+        )}
 
         {/* Bookmark Icon */}
         <button

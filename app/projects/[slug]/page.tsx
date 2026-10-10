@@ -3,8 +3,14 @@ import Link from "next/link";
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import {BackgroundBeams} from "@/components/ui/background-beams";
+import { ProjectFilmPlayer } from "@/components/ui/project-film";
 import { ArrowLeft, ExternalLink, Github, Youtube, Package } from "lucide-react";
-import { getProjectBySlug, getAllProjectSlugs } from "@/lib/projects-data";
+import {
+  getProjectBySlug,
+  getAllProjectSlugs,
+  getProjectPoster,
+  getProjectHost,
+} from "@/lib/projects-data";
 import { projectDetailStyles as s } from "@/public/dummyStyles";
 
 interface ProjectPageProps {
@@ -15,6 +21,8 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
   const { slug } = await params;
   const project = getProjectBySlug(slug);
   if (!project) notFound();
+
+  const host = getProjectHost(project);
 
   return (
     <div className={s.pageContainer}>
@@ -67,17 +75,10 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
           </div>
         </div>
 
-        {/* Project Image */}
-        <div className={s.imageContainer}>
-          <Image
-            src={project.image}
-            alt={project.title}
-            width={1200}
-            height={675}
-            priority
-            className={s.projectImage}
-          />
-        </div>
+        {/* The film, when the project has one: the first thing a visitor meets */}
+        {project.film && (
+          <ProjectFilmPlayer film={project.film} title={project.title} />
+        )}
 
         <div className={s.gridContainer}>
           {/* Main Content */}
@@ -88,6 +89,36 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
               <div className={s.prose}>
                 <p className={s.proseText}>{project.detailedDescription}</p>
               </div>
+            </section>
+
+            {/* The shipped site itself */}
+            <section>
+              <h2 className={s.sectionTitle}>The Site</h2>
+              <figure className={s.figure}>
+                <Image
+                  src={project.image}
+                  alt={`${project.title} — front of house`}
+                  width={1280}
+                  height={720}
+                  sizes="(max-width: 1024px) 100vw, 66vw"
+                  className={s.figureImage}
+                />
+                <figcaption className={s.figureCaption}>
+                  {host ? (
+                    <a
+                      href={project.links.visit}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={s.figureCaptionLink}
+                    >
+                      {host}
+                    </a>
+                  ) : (
+                    <span>{project.title}</span>
+                  )}
+                  <span>Front of house, as shipped</span>
+                </figcaption>
+              </figure>
             </section>
 
             {/* Features */}
@@ -216,7 +247,7 @@ export async function generateMetadata({ params }: ProjectPageProps) {
       description: project.description,
       images: [
         {
-          url: project.image,
+          url: getProjectPoster(project),
           alt: project.title,
         },
       ],
