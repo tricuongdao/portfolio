@@ -1,3 +1,14 @@
+/**
+ * Category groups shown as filter chips on the projects page. New categories go
+ * in this list, in the order they should be read: the page renders "All" plus
+ * every category that already has at least one project, so declaring one here
+ * costs nothing until a project uses it.
+ */
+export const projectCategoryFilters = ["All", "Web"] as const;
+
+export type ProjectCategoryFilter = (typeof projectCategoryFilters)[number];
+export type ProjectCategory = Exclude<ProjectCategoryFilter, "All">;
+
 /** A video piece that belongs to a project, shown on the project page. */
 export interface ProjectFilm {
   /** The video file itself, served from /public. */
@@ -29,6 +40,8 @@ export interface Project {
   poster?: string;
   /** Optional short film about the project. */
   film?: ProjectFilm;
+  /** Filter group shown on the projects page. One per project, like certificates. */
+  category: ProjectCategory;
   tags: string[];
   status: "active" | "archived";
   links: {
@@ -67,6 +80,7 @@ export const projects: Project[] = [
       label: "A Short Film About Lunch",
       duration: "0:25",
     },
+    category: "Web",
     tags: ["Full-Stack", "Next.js", "Three.js", "TypeScript"],
     status: "active",
     techStack: [
@@ -149,4 +163,32 @@ export function getProjectHost(project: Project): string | null {
   } catch {
     return visit.replace(/^https?:\/\//, "").replace(/\/$/, "");
   }
+}
+
+/** Filter projects by the category chips on the projects page. */
+export function getProjectsByCategory(category: ProjectCategoryFilter): Project[] {
+  const all = getAllProjects();
+  if (category === "All") return all;
+  return all.filter((project) => project.category === category);
+}
+
+/**
+ * Every chip that should be rendered, in display order: "All" first, then each
+ * declared category that has at least one project. A category with nothing in
+ * it is left out rather than shown as an empty "0" chip.
+ */
+export function getProjectCategoryFilters(): ProjectCategoryFilter[] {
+  return projectCategoryFilters.filter(
+    (category) => category === "All" || getProjectsByCategory(category).length > 0,
+  );
+}
+
+/** How many projects sit behind each chip, for the counts on the filter bar. */
+export function getProjectCategoryCounts(): Map<ProjectCategoryFilter, number> {
+  return new Map(
+    projectCategoryFilters.map((category) => [
+      category,
+      getProjectsByCategory(category).length,
+    ]),
+  );
 }

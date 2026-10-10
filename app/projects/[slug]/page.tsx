@@ -214,7 +214,7 @@ export default async function ProjectPage({ params }: ProjectPageProps) {
                 </div>
                 <div>
                   <p className={s.projectInfoLabel}>Category</p>
-                  <p className={s.projectInfoText}>{project.tags[0]}</p>
+                  <p className={s.projectInfoText}>{project.category}</p>
                 </div>
               </div>
             </section>

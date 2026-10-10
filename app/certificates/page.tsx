@@ -16,6 +16,7 @@ import {
   certificatesPageStyles as s,
   certificateTypeStyles,
   certificateTypeFallbackStyle,
+  filterBarStyles as f,
 } from "@/public/dummyStyles";
 
 const AwardIcon = ({ className }: { className?: string }) => (
@@ -72,11 +73,11 @@ export default function CertificatesPage() {
 
         {/* Type filter */}
         <div
-          className={s.filterSection}
+          className={f.section}
           role="group"
           aria-label="Filter certificates by type"
         >
-          <span className={s.filterLabel}>Type</span>
+          <span className={f.label}>Type</span>
           {typeFilters.map((type) => {
             const isActive = type === activeType;
             return (
@@ -85,14 +86,14 @@ export default function CertificatesPage() {
                 type="button"
                 onClick={() => setActiveType(type)}
                 aria-pressed={isActive}
-                className={`${s.filterChip} ${isActive ? s.filterChipActive : s.filterChipInactive}`}
+                className={`${f.chip} ${isActive ? f.chipActive : f.chipInactive}`}
               >
                 {type}
-                <span className={s.filterChipCount}>{countByType.get(type) ?? 0}</span>
+                <span className={f.chipCount}>{countByType.get(type) ?? 0}</span>
               </button>
             );
           })}
-          <span className={s.filterResultText}>
+          <span className={f.resultText}>
             Showing {visibleCertificates.length} of {allCertificates.length}
           </span>
         </div>

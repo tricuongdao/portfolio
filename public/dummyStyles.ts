@@ -290,6 +290,7 @@ export const projectStyles = {
 
   // Projects grid
   projectsGrid: "grid grid-cols-1 gap-8 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-3",
+  emptyState: "col-span-full rounded-2xl border border-dashed border-zinc-800 bg-zinc-900/20 p-10 text-center text-sm text-zinc-500",
 
   // Project card
   projectCard: "group relative h-full overflow-hidden rounded-2xl border border-zinc-800 bg-zinc-900/50 transition-all duration-300 hover:border-zinc-700 hover:bg-zinc-900 hover:shadow-2xl hover:shadow-zinc-950/50",
@@ -315,7 +316,10 @@ export const projectStyles = {
 
   // Content section
   contentSection: "p-6",
+  titleRow: "flex items-start justify-between gap-3",
   projectTitle: "text-xl font-bold text-zinc-100 group-hover:text-zinc-50",
+  // The chip answers "why is this card here?" once a category filter is on.
+  categoryBadge: "shrink-0 rounded-full border border-zinc-800 bg-zinc-950/60 px-2.5 py-1 text-[11px] font-medium whitespace-nowrap text-zinc-400",
   projectDescription: "mt-2 line-clamp-2 text-sm leading-relaxed text-zinc-400",
 
   // Tags
@@ -340,6 +344,21 @@ export const styles = {
   projects: projectStyles,
 };
 
+/*
+  Filter bar shared by the certificates and projects pages: a row of chips with
+  counts and a "Showing X of Y" line. One object rather than a copy per page, so
+  the two filter rows cannot drift apart.
+*/
+export const filterBarStyles = {
+  section: "mb-8 flex flex-wrap items-center gap-2",
+  label: "mr-1 text-xs font-medium uppercase tracking-wider text-zinc-500",
+  chip: "cursor-pointer rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950",
+  chipActive: "border-zinc-100 bg-zinc-100 text-zinc-900",
+  chipInactive: "border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:bg-zinc-900 hover:text-zinc-100",
+  chipCount: "ml-1.5 rounded-full bg-zinc-950/20 px-1.5 py-0.5 text-[11px] font-semibold",
+  resultText: "w-full text-xs text-zinc-500 sm:ml-auto sm:w-auto",
+};
+
 export const certificatesPageStyles = {
   // Layout and container styles
   pageContainer: "relative flex min-h-screen w-full justify-center bg-zinc-950 pt-20 px-6 py-12 md:px-12 md:py-20 lg:px-16",
@@ -352,14 +371,7 @@ export const certificatesPageStyles = {
   headerTitle: "text-4xl md:text-5xl font-bold tracking-tight text-zinc-100 leading-none mb-3",
   headerSubtitle: "text-md max-w-2xl text-zinc-400",
 
-  // Filter bar
-  filterSection: "mb-8 flex flex-wrap items-center gap-2",
-  filterLabel: "mr-1 text-xs font-medium uppercase tracking-wider text-zinc-500",
-  filterChip: "cursor-pointer rounded-full border px-4 py-1.5 text-sm font-medium transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-500 focus-visible:ring-offset-2 focus-visible:ring-offset-zinc-950",
-  filterChipActive: "border-zinc-100 bg-zinc-100 text-zinc-900",
-  filterChipInactive: "border-zinc-800 bg-zinc-900/50 text-zinc-400 hover:border-zinc-700 hover:bg-zinc-900 hover:text-zinc-100",
-  filterChipCount: "ml-1.5 rounded-full bg-zinc-950/20 px-1.5 py-0.5 text-[11px] font-semibold",
-  filterResultText: "w-full text-xs text-zinc-500 sm:ml-auto sm:w-auto",
+  // Filter bar lives in the shared filterBarStyles object above.
 
   // Certificates grid
   certificatesGrid: "grid grid-cols-1 gap-4 md:grid-cols-2 xl:grid-cols-3",
